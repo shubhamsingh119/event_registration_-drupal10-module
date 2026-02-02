@@ -1,0 +1,148 @@
+<?php
+
+/**
+ * @file
+ * Install, update and uninstall functions for the event_registration module.
+ */
+
+/**
+ * Implements hook_schema().
+ */
+function event_registration_schema() {
+  $schema = [];
+
+  // Event configuration table.
+  $schema['event_configuration'] = [
+    'description' => 'Stores event configuration created by administrators.',
+    'fields' => [
+      'id' => [
+        'type' => 'serial',
+        'not null' => TRUE,
+        'description' => 'Primary Key: Unique event ID.',
+      ],
+      'reg_start_date' => [
+        'type' => 'varchar',
+        'length' => 20,
+        'not null' => TRUE,
+        'description' => 'Registration start date (YYYY-MM-DD).',
+      ],
+      'reg_end_date' => [
+        'type' => 'varchar',
+        'length' => 20,
+        'not null' => TRUE,
+        'description' => 'Registration end date (YYYY-MM-DD).',
+      ],
+      'event_date' => [
+        'type' => 'varchar',
+        'length' => 20,
+        'not null' => TRUE,
+        'description' => 'Actual event date (YYYY-MM-DD).',
+      ],
+      'event_name' => [
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'description' => 'Name of the event.',
+      ],
+      'category' => [
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'description' => 'Event category (e.g., Online Workshop, Hackathon).',
+      ],
+    ],
+    'primary key' => ['id'],
+    'indexes' => [
+      'category' => ['category'],
+      'event_date' => ['event_date'],
+    ],
+  ];
+
+  // Event registration table.
+  $schema['event_registration'] = [
+    'description' => 'Stores user registrations for events.',
+    'fields' => [
+      'id' => [
+        'type' => 'serial',
+        'not null' => TRUE,
+        'description' => 'Primary Key: Unique registration ID.',
+      ],
+      'full_name' => [
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'description' => 'Full name of the registrant.',
+      ],
+      'email' => [
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'description' => 'Email address of the registrant.',
+      ],
+      'college_name' => [
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'description' => 'College name of the registrant.',
+      ],
+      'department' => [
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'description' => 'Department of the registrant.',
+      ],
+      'category' => [
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'description' => 'Event category.',
+      ],
+      'event_date' => [
+        'type' => 'varchar',
+        'length' => 20,
+        'not null' => TRUE,
+        'description' => 'Event date (YYYY-MM-DD).',
+      ],
+      'event_id' => [
+        'type' => 'int',
+        'not null' => TRUE,
+        'description' => 'Foreign key to event_configuration table.',
+      ],
+      'created' => [
+        'type' => 'int',
+        'not null' => TRUE,
+        'description' => 'Timestamp when the registration was created.',
+      ],
+    ],
+    'primary key' => ['id'],
+    'indexes' => [
+      'email' => ['email'],
+      'event_date' => ['event_date'],
+      'event_id' => ['event_id'],
+    ],
+    'foreign keys' => [
+      'event_configuration' => [
+        'table' => 'event_configuration',
+        'columns' => ['event_id' => 'id'],
+      ],
+    ],
+  ];
+
+  return $schema;
+}
+
+/**
+ * Implements hook_install().
+ */
+function event_registration_install() {
+  \Drupal::messenger()->addMessage(t('Event Registration module has been installed successfully.'));
+}
+
+/**
+ * Implements hook_uninstall().
+ */
+function event_registration_uninstall() {
+  // Delete configuration.
+  \Drupal::configFactory()->getEditable('event_registration.settings')->delete();
+  \Drupal::messenger()->addMessage(t('Event Registration module has been uninstalled. All data has been removed.'));
+}

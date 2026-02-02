@@ -1,0 +1,20 @@
+{
+    "name": "custom/event_registration",
+    "type": "drupal-module",
+    "description": "Custom module for event registration.",
+    "license": "GPL-2.0-or-later",
+    "authors": [
+        {
+            "name": "Shubham",
+            "email": "shubham@example.com"
+        }
+    ],
+    "requirements": {
+        "drupal/core": "^10"
+    },
+    "autoload": {
+        "psr-4": {
+            "Drupal\\event_registration\\": "src/"
+        }
+    }
+}
